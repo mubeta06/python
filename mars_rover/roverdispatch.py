@@ -6,6 +6,8 @@ Matthew Baker <mu.beta.06@gmail.com> 2013
 
 This module defines the base class for the RoverDispatch.
 
+Responsible for interpretting User data into controller data.
+
 """
 
 class RoverDispatch(object):

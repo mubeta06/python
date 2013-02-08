@@ -30,16 +30,18 @@ encapsulation more extensible and reusable on future missions.
 
 class Rover(object):
 
-    """Base class for representing Rover. This implementation of the Rover is 
-    going to work on a three dimensioanl Cartisan co-ordinate system in 
-    right-hand or positive orientation (as per specified here 
+    """Base class for representing Rover Model. This implementation of the Rover 
+    utilises a three dimensioanl Cartisan co-ordinate system in right-hand or 
+    positive orientation (as per specified here 
     http://en.wikipedia.org/wiki/Cartesian_coordinate_system). Accordingly, the 
-    Rover's position will be indicated using a tuple of 3 (x, y, z). The Rover's
-    heading will be represented by a tuple of two angles (Azimuth, Zenith).
-    The Azimuth angle will be defined as the angle subtended in a clockwise
-    direction from the y axis. The Zenith angle will be defined as the angle 
-    subtended in a clockwise angle from the z axis. Both angles will be defined
-    in degrees limited to the range 0-360."""
+    Rover's position is indicated using a tuple of 3 (x, y, z) and the Rover's
+    heading is represented by a tuple of two angles (Azimuth, Zenith). The 
+    Azimuth angle will be defined as the angle subtended in a counter-clockwise 
+    direction from the x axis. The Zenith angle or Polar angle is the angle 
+    between the zenith direction (z axis) and the line segment formed by the 
+    Rover's position and the origin (as per specified here
+    http://en.wikipedia.org/wiki/Spherical_coordinate_system). Both angles will 
+    be defined in degrees limited to the range 0-360."""
 
     def __init__(self, position, heading):
         """Initialise a Rover."""
@@ -54,7 +56,7 @@ class Rover(object):
         """Set the Rover's position."""
         if isinstance(position, tuple) and len(position) == 3:
             if (isinstance(position[0], int) and isinstance(position[1], int) 
-                and isinstance(position[0], int)):
+                and isinstance(position[2], int)):
                 self._position = position
             else:
                 raise Exception('position must be tuple of ints')
@@ -82,6 +84,6 @@ class Rover(object):
 
 
 if __name__ == '__main__':
-    r = Rover((2, 2, 0), (0, 90))
+    r = Rover((2, 2, 0), (90, 90))
     print r.position
     print r.heading
