@@ -9,7 +9,9 @@ Since the Rover object is merely a container for it's current position and
 heading we can only test the getters and setters.
 """
 
+import math
 import unittest
+
 import rover
 
 
@@ -41,8 +43,8 @@ class TestRover(unittest.TestCase):
         self.assertRaises(Exception, set_angle, (5, -10))
         self.assertRaises(Exception, set_angle, (375, 10))
         self.assertRaises(Exception, set_angle, (75, 1110))
-        set_angle((0, 360))
-        self.assert_(r.heading == (0, 360))
+        set_angle((0, 2*math.pi))
+        self.assert_(r.heading == (0, 2*math.pi))
 
 
 if __name__ == '__main__':

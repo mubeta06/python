@@ -16,6 +16,8 @@ ensure that Rover's do not collide and, furthermore, do not stray outside the
 nominated co-ordinate system.
 """
 
+import math
+
 import rover
 
 
@@ -36,7 +38,7 @@ class RoverController(object):
         if self.is_empty(position):
             self.rovers[rover_id] = rover.Rover(position, heading)
         else:
-            raise Exception('rover already occupies this position.')
+            raise Exception('A Rover already occupies this position.')
 
     def move(self, rover_id, distance):
         """The movement of a Rover is differential, i.e. the Rover will be moved
@@ -48,22 +50,38 @@ class RoverController(object):
         In addition to enforcing these restrictions the RoverController is 
         responsible for appropriately updating the Rovers co-ordinates, ensuring
         that movement of the Rover is not going to see it moving outside of the 
-        grid limits and not into another Rover.
-        """
-        """Might be nice to recursively call this so the Rover steps incrementally.
-        Because of the orthogonality restriction all non zero angles must be 
-        divisible by pi/2. Also since the Rover can only move in dimensionless
-        unit steps we need to ensure that distance is an integer."""
-        current_position = self.rovers[rover_id].position
-        print current_position
+        grid limits and not into another Rover."""
 
-    def turn(self, azimuth, zenith):
+        r = self.rovers[rover_id]
+        x, y, z = r.position
+        print x, y, z
+        if (distance > 0):
+            x += int(math.sin(r.zenith)*math.cos(r.azimuth))
+            y += int(math.sin(r.zenith)*math.sin(r.azimuth))
+            z += int(math.cos(r.zenith))
+            if self.is_empty((x, y, z)):
+                r.position = (x, y, z)
+                self.move(rover_id, distance - 1)
+            else:
+                raise Exception('A Rover already occupies this position.')
+        
+
+    def turn(self, rover_id, azimuth, zenith):
         """The turning of a Rover is also differential, i.e. the Rover will be 
         turned from the current heading by the amount specified by Azimuthh and 
         Zenith angles. In this implementation a Rover can only turn orthogonally 
         thus, distance all nonzero Azimuth and Zenith angles must be divisible 
         by pi/2."""
-        pass
+        if azimuth % (math.pi/2) == 0.0 and zenith % (math.pi/2) == 0.0:
+            r = self.rovers[rover_id]
+            az = r.azimuth
+            z = r.zenith
+            az += azimuth
+            z += zenith
+            r.heading = (az, z)
+            #mod 2pi??
+        else:
+            raise Exception('Rover can only turn orthognally')
 
     def is_empty(self, position):
         """Checks if the specified position is empty or not. Returns True if
@@ -75,6 +93,14 @@ class RoverController(object):
 
 if __name__ == '__main__':
     controller = RoverController((5, 5, 5))
-    controller.add_rover('rover1', (0, 0, 0), (90, 90))
-    controller.move('rover1', 4, (0, 0))
+    controller.add_rover('rover1', (1, 2, 0), (math.pi/2, math.pi/2))
+    controller.turn('rover1',  math.pi/2, 0)
+    controller.move('rover1', 1)
+    controller.turn('rover1',  math.pi/2, 0)
+    controller.move('rover1', 1)
+    controller.turn('rover1',  math.pi/2, 0)
+    controller.move('rover1', 1)
+    controller.turn('rover1',  math.pi/2, 0)
+    controller.move('rover1', 1)
+    controller.move('rover1', 1)
 

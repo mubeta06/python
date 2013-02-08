@@ -27,6 +27,8 @@ restrictions as specified in the problem at a higher level thus making the Rover
 encapsulation more extensible and reusable on future missions.
 """
 
+import math
+
 
 class Rover(object):
 
@@ -70,13 +72,22 @@ class Rover(object):
     def _set_heading(self, heading):
         """Set the Rover's heading."""
         if isinstance(heading, tuple) and len(heading) == 2:
-            if (isinstance(heading[0], int) and isinstance(heading[1], int) and
-                0 <= heading[0] <= 360 and 0 <= heading[1] <= 360):
-                self._heading = heading
-            else:
-                raise Exception('heading must be tuple of ints in range 0-360')
+            #if (0 <= heading[0] <= 2*math.pi and 0 <= heading[1] <= 2*math.pi):
+            self._heading = heading
+            #else:
+            #    raise Exception('heading must be tuple of ints in range 0-360')
         else:
             raise Exception('heading must be tuple of length 2.')
+
+    @property
+    def azimuth(self):
+        """Convenience routine for retrieving Rover's Azimuth angle."""
+        return self.heading[0] if self.heading != None else None    
+
+    @property
+    def zenith(self):
+        """Convenience routine for retrieving Rover's Zenith angle."""
+        return self.heading[1] if self.heading != None else None
 
     #properties
     position = property(_get_position, _set_position, None)
@@ -84,6 +95,8 @@ class Rover(object):
 
 
 if __name__ == '__main__':
-    r = Rover((2, 2, 0), (90, 90))
+    r = Rover((2, 2, 0), (math.pi/2, math.pi/2))
     print r.position
     print r.heading
+    print r.azimuth, r.zenith
+

@@ -16,3 +16,11 @@ class RoverDispatch(object):
 
     def __init__(self):
         """Initialise a RoverDispatch."""
+
+    def turn_left(self):
+        """Turn Rover left."""
+        pass
+
+    def turn_right(self):
+        """Turn Rover Right."""
+        pass
