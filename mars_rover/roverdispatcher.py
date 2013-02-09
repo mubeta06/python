@@ -29,7 +29,7 @@ class RoverDispatcher(object):
 
     def parse_input(self, input):
         """Parse input according to problem description."""
-        self.input = input.split('\n')[:-1] #null char
+        self.input = input.split('\n')
         vertex = tuple([int(v) for v in self.input[0].split(' ')] + [0])
         self.controller = rovercontroller.RoverController(((0, 0, 0), vertex))
         self.rovers = []
@@ -98,16 +98,25 @@ class RoverDispatcher(object):
 
 def main():
     """Main Program.
-    Usage: Batch - cat inputfile.txt | python roverdispatcher.py
-    Interactive - python roverdispatcher.py"""
+    Usage:
+    Interactive python roverdispatcher.py
+    Batch       cat inputfile.txt | python roverdispatcher.py"""
     if sys.stdin.isatty():
         input = ''
-        vertices = raw_input('Please enter grid vertex: ')
-        rover = raw_input('Please enter something else: ')
-        input += vertices + '\n'
-        input += rover + '\n'
+        vertex = raw_input('Please enter grid vertex e.g. x y: ')
+        input += vertex + '\n'
+        while(1):        
+            rover = raw_input('Please enter Rover e.g. x y H: ')
+            if rover == '':
+                break
+            else:
+                input += rover + '\n'
+            instructions = raw_input('Please enter Rover instructions:')
+            input += instructions + '\n'
     else:        
         input = sys.stdin.read()
+    
+    input = input[:-1] if input[-1] == '\n' else input #strip trailing \n
 
     dispatcher = RoverDispatcher(input)
     dispatcher.dispatch()
