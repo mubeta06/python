@@ -4,7 +4,7 @@ This file is part of a solution to the Mars Rover Exercise.
 
 Matthew Baker <mu.beta.06@gmail.com> 2013
 
-This module defines the base class for the Rover.
+This module defines the base class for the Rover Model.
 
 Properties What make a Rover?
 -----------------------------
@@ -38,12 +38,12 @@ class Rover(object):
     http://en.wikipedia.org/wiki/Cartesian_coordinate_system). Accordingly, the 
     Rover's position is indicated using a tuple of 3 (x, y, z) and the Rover's
     heading is represented by a tuple of two angles (Azimuth, Zenith). The 
-    Azimuth angle will be defined as the angle subtended in a counter-clockwise 
+    Azimuth angle is defined as the angle subtended in a counter-clockwise 
     direction from the x axis. The Zenith angle or Polar angle is the angle 
     between the zenith direction (z axis) and the line segment formed by the 
     Rover's position and the origin (as per specified here
-    http://en.wikipedia.org/wiki/Spherical_coordinate_system). Both angles will 
-    be defined in degrees limited to the range 0-360."""
+    http://en.wikipedia.org/wiki/Spherical_coordinate_system). Both angles are 
+    defined in modulo 2pi radians."""
 
     def __init__(self, position, heading):
         """Initialise a Rover."""
@@ -57,11 +57,7 @@ class Rover(object):
     def _set_position(self, position):
         """Set the Rover's position."""
         if isinstance(position, tuple) and len(position) == 3:
-            if (isinstance(position[0], int) and isinstance(position[1], int) 
-                and isinstance(position[2], int)):
-                self._position = position
-            else:
-                raise Exception('position must be tuple of ints')
+            self._position = position
         else:
             raise Exception('position must be tuple of length 3.')
 
@@ -72,22 +68,9 @@ class Rover(object):
     def _set_heading(self, heading):
         """Set the Rover's heading."""
         if isinstance(heading, tuple) and len(heading) == 2:
-            #if (0 <= heading[0] <= 2*math.pi and 0 <= heading[1] <= 2*math.pi):
-            self._heading = heading
-            #else:
-            #    raise Exception('heading must be tuple of ints in range 0-360')
+            self._heading = (heading[0] % (2*math.pi), heading[1] % (2*math.pi))
         else:
             raise Exception('heading must be tuple of length 2.')
-
-    @property
-    def azimuth(self):
-        """Convenience routine for retrieving Rover's Azimuth angle."""
-        return self.heading[0] if self.heading != None else None    
-
-    @property
-    def zenith(self):
-        """Convenience routine for retrieving Rover's Zenith angle."""
-        return self.heading[1] if self.heading != None else None
 
     #properties
     position = property(_get_position, _set_position, None)
@@ -98,5 +81,3 @@ if __name__ == '__main__':
     r = Rover((2, 2, 0), (math.pi/2, math.pi/2))
     print r.position
     print r.heading
-    print r.azimuth, r.zenith
-

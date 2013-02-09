@@ -20,7 +20,13 @@ class RoverDispatch(object):
     def turn_left(self):
         """Turn Rover left."""
         pass
+        #controller.turn('rover1',  math.pi/2, 0)
 
     def turn_right(self):
         """Turn Rover Right."""
+        pass
+        #controller.turn('rover2', -math.pi/2, 0)
+
+    def move(self):
+        """Move the nominated Rover forward 1 position."""
         pass
