@@ -114,6 +114,11 @@ class RoverController(object):
     def check_position(self, position):
         """Checks the specified position raising the appropriate exception if
         position is illegal."""
+        if not isinstance(position, tuple) and len(vertices) == 3:
+            raise Exception('position must be tuple of length 3.')
+        if not (isinstance(position[0], int) and isinstance(position[1], int) 
+            and isinstance(position[2], int)):
+            raise Exception('positions must be integers.')
         if not self.is_empty(position):
             raise Exception('Rover already occupies %s' % str(position))
         elif not self.in_grid(position):
