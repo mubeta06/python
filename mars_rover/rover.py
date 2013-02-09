@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 """
-This file is part of a solution to the Mars Rover Exercise.
+This file is part of a solution to the Mars Rover Exercise
+(http://thefundoowriter.com/2009/10/01/the-mars-rover-problem/).
 
 Matthew Baker <mu.beta.06@gmail.com> 2013
 
 This module defines the base class for the Rover Model.
 
-Properties What make a Rover?
+Properties What makes a Rover?
 -----------------------------
 According to the problem specification a Rover has position which is represented 
 by a combination of x and y co-ordinates and also a heading which is represented 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
-This file is part of a solution to the Mars Rover Exercise.
+This file is part of a solution to the Mars Rover Exercise
+(http://thefundoowriter.com/2009/10/01/the-mars-rover-problem/).
 
 Matthew Baker <mu.beta.06@gmail.com> 2013
 
@@ -67,7 +68,6 @@ class RoverController(object):
             raise Exception('Rover can only move integer units')
         elif distance > 0:
             r = self.get_rover(rover_id)
-            print r.position
             x, y, z = r.position
             azimuth, zenith = r.heading
             x += int(math.sin(zenith)*math.cos(azimuth))
