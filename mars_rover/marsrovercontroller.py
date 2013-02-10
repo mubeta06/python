@@ -43,6 +43,8 @@ class MarsRoverController(rovercontroller.RoverController):
             self.check_position((x, y, z))
             r.position = (x, y, z)
             self.move(rover_id, distance - 1)
+        elif distance < 0:
+            raise Exception('Rover can only move in the forward direction')
 
     def turn(self, rover_id, azimuth, zenith):
         """The turning of a Rover is also differential, i.e. the Rover will be 

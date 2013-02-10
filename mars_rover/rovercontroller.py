@@ -9,14 +9,11 @@ This module defines the base class for the RoverController.
 
 The RoverController is responsible for implementing the rules that govern the
 movement of Rovers throughout a given co-ordinate system, moreover, the 
-RoverController is responsible for restricting Rover(s) movement. More 
-specifically, this implementation of a RoverController sees the restriction of
-Rover's movements to orthogonal adjacent unit steps in a rectangular grid in a 
-forward only direction. In addition to restricting Rover movement the 
-RoverController should ensure that Rover's do not collide and, furthermore, do 
-not stray outside the nominated co-ordinate system.
+RoverController is responsible for restricting Rover(s) movement. In addition to 
+restricting Rover movement the RoverController should ensure that Rover's do not 
+collide and, furthermore, do not stray outside the nominated co-ordinate system.
 
-If co-ordinate translation is required a affine matirx can be layered onto 
+If co-ordinate translation is required a affine matrix can be layered onto 
 either side of this Controller.
 """
 
@@ -54,43 +51,14 @@ class RoverController(object):
             return self.rovers[rover_id]
 
     def move(self, rover_id, distance):
-        """The movement of a Rover is parametric and differential, i.e. the 
-        Rover will be moved throughout the co-ordinate space the specified 
-        distance from it's current position at it's current heading. In this 
-        implementation a Rover can only move in the forward direction 
-        dimensionless integer number of unit lengths. 
-
-        In addition to enforcing these restrictions the RoverController is 
-        responsible for appropriately updating the Rovers co-ordinates, ensuring
-        that movement of the Rover is not going to see it moving outside of the 
-        grid limits and not into another Rover."""
-        if not isinstance(distance, int):
-            raise Exception('Rover can only move integer units')
-        elif distance > 0:
-            r = self.get_rover(rover_id)
-            x, y, z = r.position
-            azimuth, zenith = r.heading
-            x += int(math.sin(zenith)*math.cos(azimuth))
-            y += int(math.sin(zenith)*math.sin(azimuth))
-            z += int(math.cos(zenith))
-            self.check_position((x, y, z))
-            r.position = (x, y, z)
-            self.move(rover_id, distance - 1)
+        """Stub method for moving Rover to be overridden in subclass 
+        implementation."""
+        pass
 
     def turn(self, rover_id, azimuth, zenith):
-        """The turning of a Rover is also differential, i.e. the Rover will be 
-        turned from the current heading by the amount specified by Azimuthh and 
-        Zenith angles. In this implementation a Rover can only turn orthogonally 
-        thus, distance all nonzero Azimuth and Zenith angles must be divisible 
-        by pi/2."""
-        if azimuth % (math.pi/2) == 0.0 and zenith % (math.pi/2) == 0.0:
-            r = self.get_rover(rover_id)
-            az, z = r.heading
-            az += azimuth
-            z += zenith
-            r.heading = (az, z)
-        else:
-            raise Exception('Rover can only turn orthognally')
+        """Stub method for turning Rover to be overridden in subclass 
+        implementation."""
+        pass
 
     def is_empty(self, position):
         """Checks if the specified position is empty or not. Returns True if
@@ -148,29 +116,10 @@ if __name__ == '__main__':
     
     #rover 1
     controller.add_rover('rover1', (1, 2, 0), (math.pi/2, math.pi/2))
-    controller.turn('rover1',  math.pi/2, 0)
-    controller.move('rover1', 1)
-    controller.turn('rover1',  math.pi/2, 0)
-    controller.move('rover1', 1)
-    controller.turn('rover1',  math.pi/2, 0)
-    controller.move('rover1', 1)
-    controller.turn('rover1',  math.pi/2, 0)
-    controller.move('rover1', 1)
-    controller.move('rover1', 1)
     r = controller.get_rover('rover1')
     print r.position, r.heading
     print
     #rover 2
     controller.add_rover('rover2', (3, 3, 0), (0, math.pi/2))
-    controller.move('rover2', 1)
-    controller.move('rover2', 1)
-    controller.turn('rover2', -math.pi/2, 0)
-    controller.move('rover2', 1)
-    controller.move('rover2', 1)
-    controller.turn('rover2', -math.pi/2, 0)
-    controller.move('rover2', 1)
-    controller.turn('rover2', -math.pi/2, 0)
-    controller.turn('rover2', -math.pi/2, 0)
-    controller.move('rover2', 1)
     r = controller.get_rover('rover2')
     print r.position, r.heading

@@ -14,7 +14,7 @@ Responsible for interpretting user data into controller data.
 import math
 import sys
 
-import rovercontroller
+import marsrovercontroller
 
 class RoverDispatcher(object):
 
@@ -25,27 +25,34 @@ class RoverDispatcher(object):
     def __init__(self, input):
         """Initialise a RoverDispatcher. Parse input according to problem 
         description."""
-        self.parse_input(input)
-
-    def parse_input(self, input):
-        """Parse input according to problem description."""
-        self.input = input.split('\n')
-        vertex = tuple([int(v) for v in self.input[0].split(' ')] + [0])
-        self.controller = rovercontroller.RoverController(((0, 0, 0), vertex))
+        input = input.split('\n')
+        vertex = self.parse_vertex(input[0])
+        self.controller = marsrovercontroller.MarsRoverController(((0, 0, 0), 
+                                                                    vertex))
         self.rovers = []
         self.instructions = []
-        #parse and add Rovers
-        for line in self.input[1::2]:
+        self.parse_rovers(input)
+        self.parse_instructions(input)        
+
+    def parse_vertex(self, vertex_input):
+        """Parse the vertex specific input.""" #test ValueError
+        return tuple([int(v) for v in vertex_input.split(' ')] + [0])
+
+    def parse_rovers(self, input):
+        """Parse and add Rovers."""
+        for line in input[1::2]:
             rover = line.split(' ')
             if len(rover) == 3:
                 position = tuple([int(v) for v in rover[0:2]] + [0])
                 heading = (self.map_user_heading(rover[-1]), math.pi/2)
                 self.controller.add_rover(line, position, heading)
-                self.rovers.append(line) #rover idd by starting pos and heading
+                self.rovers.append(line) #rover id starting position and heading
             else:
                 raise Exception('Incorrectly specified Rover.')
-        #parse instructions        
-        self.instructions = [[c for c in line] for line in self.input[2::2]]
+    
+    def parse_instructions(self, input):
+        """Parse Instruction string."""
+        self.instructions = [[c for c in line] for line in input[2::2]]
 
     def dispatch(self):
         """Dispatch Rover input to RoverController."""
