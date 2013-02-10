@@ -24,21 +24,26 @@ class TestRover(unittest.TestCase):
     heading = (math.pi/2, math.pi/2)
     r = rover.Rover(position, heading)
 
-    def setUp(self):
-        pass
-
-    def tearDown(self): 
-        pass
-
     def test_creation(self):
         """Test creation of Rover container."""
         r = rover.Rover(self.position, self.heading)
-        self.assert_(r.position == self.position)
-        self.assert_(r.heading == self.heading)
+        self.assertEqual(r.position, self.position)
+        self.assertEqual(r.heading, self.heading)
 
     def test_angle_limits(self):
         """Test both Azimuth and Zenith angle are mod 2pi."""
-        self.assert_(self.r.heading > 2*math.pi)
+        #==2pi        
+        self.r.heading = (2*math.pi, 2*math.pi/2)        
+        self.assertGreater(self.r.heading, 2*math.pi)
+        #>2pi        
+        self.r.heading = (3*math.pi, 3*math.pi/2)
+        self.assertGreater(self.r.heading, 2*math.pi)
+        #-ve        
+        self.r.heading = (-2*math.pi, -2*math.pi)
+        self.assertGreater(self.r.heading, 2*math.pi)
+        #0        
+        self.r.heading = (0, 0)        
+        self.assertGreater(self.r.heading, 2*math.pi)
 
     def test_set_position(self):
         """Test position setter."""
