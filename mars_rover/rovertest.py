@@ -32,16 +32,12 @@ class TestRover(unittest.TestCase):
 
     def test_angle_limits(self):
         """Test both Azimuth and Zenith angle are mod 2pi."""
-        #==2pi        
         self.r.heading = (2*math.pi, 2*math.pi/2)        
         self.assertGreater(self.r.heading, 2*math.pi)
-        #>2pi        
         self.r.heading = (3*math.pi, 3*math.pi/2)
         self.assertGreater(self.r.heading, 2*math.pi)
-        #-ve        
         self.r.heading = (-2*math.pi, -2*math.pi)
         self.assertGreater(self.r.heading, 2*math.pi)
-        #0        
         self.r.heading = (0, 0)        
         self.assertGreater(self.r.heading, 2*math.pi)
 
