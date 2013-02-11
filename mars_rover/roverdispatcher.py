@@ -109,10 +109,12 @@ class RoverDispatcher(object):
 
     def render_view(self):
         """Renders view to user."""
+        output = ""
         for rover in self.rovers:
             r = self.controller.get_rover(rover)
             heading = self.map_controller_heading(r.heading[0])
-            print r.position[0], r.position[1], heading
+            output += '%d %d %s\n' % (r.position[0], r.position[1], heading)
+        return output
 
 
 def main():
@@ -140,7 +142,7 @@ def main():
     dispatcher = RoverDispatcher()
     dispatcher.parse_input(input)
     dispatcher.dispatch()
-    dispatcher.render_view()
+    print dispatcher.render_view()
 
 if __name__ == '__main__':
     main()
