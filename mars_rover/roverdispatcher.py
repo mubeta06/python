@@ -22,37 +22,49 @@ class RoverDispatcher(object):
     INSTRUCTIONS = ['L', 'R', 'M']
     HEADINGS = {'E':0, 'N':math.pi/2, 'W':math.pi, 'S':3*math.pi/2}
 
-    def __init__(self, input):
+    def __init__(self):
         """Initialise a RoverDispatcher. Parse input according to problem 
         description."""
+        self.controller = None
+        self.rovers = []
+        self.instructions = []
+
+    def parse_input(self, input):
+        """Parse input string."""
         input = input.split('\n')
         vertex = self.parse_vertex(input[0])
         self.controller = marsrovercontroller.MarsRoverController(((0, 0, 0), 
                                                                     vertex))
-        self.rovers = []
-        self.instructions = []
-        self.parse_rovers(input)
-        self.parse_instructions(input)        
-
-    def parse_vertex(self, vertex_input):
-        """Parse the vertex specific input.""" #test ValueError
-        return tuple([int(v) for v in vertex_input.split(' ')] + [0])
-
-    def parse_rovers(self, input):
-        """Parse and add Rovers."""
         for line in input[1::2]:
-            rover = line.split(' ')
-            if len(rover) == 3:
+            self.parse_rover(line)
+        for line in input[2::2]:
+            self.parse_instruction(line)
+
+    def parse_vertex(self, vertex):
+        """Parse the vertex specific input."""
+        try:
+            return tuple([int(v) for v in vertex.strip().split(' ')] + [0])
+        except ValueError, e:
+            raise ValueError('vertex must be specified int int')
+
+    def parse_rover(self, input):
+        """Parse and add Rover."""
+        input = input.strip()
+        rover = input.split(' ')
+        if len(rover) == 3:
+            try:
                 position = tuple([int(v) for v in rover[0:2]] + [0])
-                heading = (self.map_user_heading(rover[-1]), math.pi/2)
-                self.controller.add_rover(line, position, heading)
-                self.rovers.append(line) #rover id starting position and heading
-            else:
-                raise Exception('Incorrectly specified Rover.')
+            except ValueError, e:
+                raise ValueError('Rover position must be specified int int')
+            heading = (self.map_user_heading(rover[-1]), math.pi/2)
+            self.controller.add_rover(input, position, heading)
+            self.rovers.append(input) #rover id starting position and heading
+        else:
+            raise Exception('Incorrectly specified Rover.')
     
-    def parse_instructions(self, input):
-        """Parse Instruction string."""
-        self.instructions = [[c for c in line] for line in input[2::2]]
+    def parse_instruction(self, input):
+        """Parse and add Instruction string."""
+        self.instructions.append([c for c in input.strip()])
 
     def dispatch(self):
         """Dispatch Rover input to RoverController."""
@@ -113,11 +125,11 @@ def main():
         vertex = raw_input('Please enter grid vertex e.g. x y: ')
         input += vertex + '\n'
         while(1):        
-            rover = raw_input('Please enter Rover e.g. x y H: ')
-            if rover == '':
+            r = raw_input('Please enter Rover e.g. x y H (enter to dispatch): ')
+            if r == '':
                 break
             else:
-                input += rover + '\n'
+                input += r + '\n'
             instructions = raw_input('Please enter Rover instructions:')
             input += instructions + '\n'
     else:        
@@ -125,7 +137,8 @@ def main():
     
     input = input[:-1] if input[-1] == '\n' else input #strip trailing \n
 
-    dispatcher = RoverDispatcher(input)
+    dispatcher = RoverDispatcher()
+    dispatcher.parse_input(input)
     dispatcher.dispatch()
     dispatcher.render_view()
 

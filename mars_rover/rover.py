@@ -60,7 +60,7 @@ class Rover(object):
         if isinstance(position, tuple) and len(position) == 3:
             self._position = position
         else:
-            raise Exception('position must be tuple of length 3.')
+            raise ValueError('position must be tuple of length 3.')
 
     def _get_heading(self):
         """Return the Rover's heading."""
@@ -71,7 +71,7 @@ class Rover(object):
         if isinstance(heading, tuple) and len(heading) == 2:
             self._heading = (heading[0] % (2*math.pi), heading[1] % (2*math.pi))
         else:
-            raise Exception('heading must be tuple of length 2.')
+            raise ValueError('heading must be tuple of length 2.')
 
     #properties
     position = property(_get_position, _set_position, None)

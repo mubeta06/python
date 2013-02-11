@@ -103,7 +103,7 @@ class RoverController(object):
                 isinstance(vertices[1], tuple) and len(vertices[1]) == 3):
                 self._vertices = vertices
             else:
-                raise Exception('vertix must be tuple of length 3.')            
+                raise Exception('vertex must be tuple of length 3.')            
         else:
             raise Exception('vertices must be tuple of length 2.')
 

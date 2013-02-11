@@ -43,11 +43,11 @@ class TestRover(unittest.TestCase):
 
     def test_set_position(self):
         """Test position setter."""
-        def set_position((x, y, z)):
-            self.r.position = (x, y, z)
-        self.assertRaises(Exception, set_position, (0, 2))
-        self.assertRaises(Exception, set_position, (0))
-        self.assertRaises(Exception, set_position, 0)
+        def set_position(position):
+            self.r.position = position
+        self.assertRaises(ValueError, set_position, (0, 2))
+        self.assertRaises(ValueError, set_position, (0))
+        self.assertRaises(ValueError, set_position, 0)
 
 
 if __name__ == '__main__':
