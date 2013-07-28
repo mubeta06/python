@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>libqrencode.qrencode – QR Encoding &mdash; libqrencode ctypes bindings 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="libqrencode ctypes bindings 1.0 documentation" href="index.html" />
+    <link rel="next" title="libqrencode._qrencode" href="_qrencode.html" />
+    <link rel="prev" title="libqrencode – Python Bindings to libqrencode" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="_qrencode.html" title="libqrencode._qrencode"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="libqrencode – Python Bindings to libqrencode"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">libqrencode ctypes bindings 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-libqrencode.qrencode">
+<span id="libqrencode-qrencode-qr-encoding"></span><h1><a class="reference internal" href="#module-libqrencode.qrencode" title="libqrencode.qrencode"><tt class="xref py py-mod docutils literal"><span class="pre">libqrencode.qrencode</span></tt></a> &#8211; QR Encoding<a class="headerlink" href="#module-libqrencode.qrencode" title="Permalink to this headline">¶</a></h1>
+<p>Python ctypes binding to libqrencode.</p>
+<p>This module when ran as a script attempts to mimic the c sample program 
+qrenc.c otherwise known as qrencode</p>
+<p>This file is part of libqrencode python ctypes bindings.</p>
+<p>Copyright (C) 2012 Matthew Baker &lt;<a class="reference external" href="mailto:mu&#46;beta&#46;06&#37;&#52;&#48;gmail&#46;com">mu<span>&#46;</span>beta<span>&#46;</span>06<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+<p>This is free software: you can redistribute it and/or modify
+it under the terms of the LGNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>This software is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the LGNU Lesser General Public License
+along with this software.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Install libqrencode.</p>
+</li>
+<li><p class="first">Unpack archive onto local machine.</p>
+</li>
+<li><p class="first">Run</p>
+<div class="highlight-python"><pre>$ python setup.py install</pre>
+</div>
+</li>
+<li><p class="first">Test</p>
+<div class="highlight-python"><pre>$ python -m libqrencode.qrencode 'Hello World'
+XXXXXXXXXXXXXX    XX  XXXX  XXXXXXXXXXXXXX
+XX          XX    XXXXXX    XX          XX
+XX  XXXXXX  XX  XXXX  XXXX  XX  XXXXXX  XX
+XX  XXXXXX  XX    XX  XX    XX  XXXXXX  XX
+XX  XXXXXX  XX      XX  XX  XX  XXXXXX  XX
+XX          XX          XX  XX          XX
+XXXXXXXXXXXXXX  XX  XX  XX  XXXXXXXXXXXXXX
+                XXXX  XXXX
+XXXXXX  XXXXXXXXXXXXXXXX  XXXX      XX
+  XXXX  XXXX    XXXXXX      XXXXXX    XXXX
+XX  XX  XX  XX  XX  XX  XXXX  XXXXXXXXXXXX
+    XX          XXXXXX          XX    XX
+XXXX    XX  XXXX  XX    XXXX  XXXX
+                XX  XXXX  XX        XXXX
+XXXXXXXXXXXXXX  XX  XXXX      XXXX  XXXXXX
+XX          XX  XXXX  XXXX    XX        XX
+XX  XXXXXX  XX  XX    XX        XX
+XX  XXXXXX  XX    XXXXXX    XXXXXX  XXXX
+XX  XXXXXX  XX  XX  XX  XX  XX  XX  XX  XX
+XX          XX  XX    XX        XX    XX
+XXXXXXXXXXXXXX  XX  XXXXXX    XX      XXXX</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="scripted-usage">
+<h3>Scripted Usage<a class="headerlink" href="#scripted-usage" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Run the following for usage</p>
+<div class="highlight-python"><pre>$ python -m libqrencode.qrencode -h
+Usage: qrencode [OPTION]... [STRING]
+
+libqrencode ctypes python binding version 1.0, libqrencode version 3.2.1
+
+Options:
+  -h, --help            show this help message and exit
+  -o FILENAME, --filename=FILENAME
+                        Encoded image filename (.png, .pdf, .jpg, .tif...)
+  -s SIZE, --size=SIZE  Specify module size in dots (pixels). (default=3)
+  -l LEVEL, --level=LEVEL
+                        specify error correction level from L (lowest) to H
+                        (highest). (default=L)
+  -v SYMVERSION, --symversion=SYMVERSION
+                        specify the version of the symbol. (default=auto)
+  -m MARGIN, --margin=MARGIN
+                        specify the width of the margins. (default=4)
+                        (2 for Micro)))
+  -d DPI, --dpi=DPI     specify the DPI of the generated PNG. (default=72)
+  -S, --structured      make structured symbols. Version must be
+                        specified.
+  -k, --kanji           assume that the input text contains kanji
+                        (shift-jis).
+  -c, --casesensitive   encode lower-case alphabet characters in 8-bit mode.
+                        (default)
+  -8, --eightbit        encode entire data in 8-bit mode. -k and -c will be
+                        ignored.
+  -M, --micro           encode in a Micro QR Code. (experimental).</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="module-usage">
+<h3>Module Usage<a class="headerlink" href="#module-usage" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Import libqrencode bindings:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">libqrencode</span> <span class="kn">import</span> <span class="n">qrencode</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a <tt class="xref py py-class docutils literal"><span class="pre">qrencode.QREncoder</span></tt> instantiation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span> <span class="o">=</span> <span class="n">qrencode</span><span class="o">.</span><span class="n">QREncoder</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Encode a string using the aforementioned instantiation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;Hello World&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Select encoded output format from one of the following output formats:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first">ASCII:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="o">.</span><span class="n">asciipreview</span><span class="p">()</span>
+<span class="go">XXXXXXXXXXXXXX    XX  XXXX  XXXXXXXXXXXXXX</span>
+<span class="go">XX          XX    XXXXXX    XX          XX</span>
+<span class="go">XX  XXXXXX  XX  XXXX  XXXX  XX  XXXXXX  XX</span>
+<span class="go">XX  XXXXXX  XX    XX  XX    XX  XXXXXX  XX</span>
+<span class="go">XX  XXXXXX  XX      XX  XX  XX  XXXXXX  XX</span>
+<span class="go">XX          XX          XX  XX          XX</span>
+<span class="go">XXXXXXXXXXXXXX  XX  XX  XX  XXXXXXXXXXXXXX</span>
+<span class="go">                XXXX  XXXX</span>
+<span class="go">XXXXXX  XXXXXXXXXXXXXXXX  XXXX      XX</span>
+<span class="go">  XXXX  XXXX    XXXXXX      XXXXXX    XXXX</span>
+<span class="go">XX  XX  XX  XX  XX  XX  XXXX  XXXXXXXXXXXX</span>
+<span class="go">    XX          XXXXXX          XX    XX</span>
+<span class="go">XXXX    XX  XXXX  XX    XXXX  XXXX</span>
+<span class="go">                XX  XXXX  XX        XXXX</span>
+<span class="go">XXXXXXXXXXXXXX  XX  XXXX      XXXX  XXXXXX</span>
+<span class="go">XX          XX  XXXX  XXXX    XX        XX</span>
+<span class="go">XX  XXXXXX  XX  XX    XX        XX</span>
+<span class="go">XX  XXXXXX  XX    XXXXXX    XXXXXX  XXXX</span>
+<span class="go">XX  XXXXXX  XX  XX  XX  XX  XX  XX  XX  XX</span>
+<span class="go">XX          XX  XX    XX        XX    XX</span>
+<span class="go">XXXXXXXXXXXXXX  XX  XXXXXX    XX      XXXX</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Boolean list of lists:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">qr_list</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">as2dlist</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Postscript string:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">qr_ps</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">asps</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+<p>See the individual classes, methods, attributes and functions below for further details.</p>
+</div>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="libqrencode.qrencode.QREncode">
+<em class="property">class </em><tt class="descclassname">libqrencode.qrencode.</tt><tt class="descname">QREncode</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#QREncode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.QREncode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for representing QREncode c structures. Allows for struct 
+member read access as class attributes.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="libqrencode.qrencode.QRcode">
+<em class="property">class </em><tt class="descclassname">libqrencode.qrencode.</tt><tt class="descname">QRcode</tt><big>(</big><em>p</em>, <em>cleanup=True</em><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#QRcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.QRcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Python representation of QRcode c structure</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="libqrencode.qrencode.QRcode_List">
+<em class="property">class </em><tt class="descclassname">libqrencode.qrencode.</tt><tt class="descname">QRcode_List</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#QRcode_List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.QRcode_List" title="Permalink to this definition">¶</a></dt>
+<dd><p>Python representation of QRcode_List c structure.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="libqrencode.qrencode.QREncoder">
+<em class="property">class </em><tt class="descclassname">libqrencode.qrencode.</tt><tt class="descname">QREncoder</tt><a class="reference internal" href="_modules/libqrencode/qrencode.html#QREncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.QREncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for representing QREncoder.</p>
+<p>Largely used to maintain the state that the globals in qrenc.c represent.</p>
+<dl class="method">
+<dt id="libqrencode.qrencode.QREncoder.as2dlist">
+<tt class="descname">as2dlist</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#QREncoder.as2dlist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.QREncoder.as2dlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of lists describing the encoded data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="libqrencode.qrencode.QREncoder.asciipreview">
+<tt class="descname">asciipreview</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#QREncoder.asciipreview"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.QREncoder.asciipreview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print an ascii representation of the Encoder output to stdout</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="libqrencode.qrencode.QREncoder.asps">
+<tt class="descname">asps</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#QREncoder.asps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.QREncoder.asps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PostScript representation of the encoded QRCode.</p>
+<p>Paints the &#8220;black&#8221; symbol in the current colour on the assumption
+that the background has already been painted and appropriate colour.
+Symbols are assumed to be 1 user coordinate square.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="libqrencode.qrencode.QREncoder.casesensitive">
+<tt class="descname">casesensitive</tt><a class="headerlink" href="#libqrencode.qrencode.QREncoder.casesensitive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the QREncoder&#8217;s casesensitive property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="libqrencode.qrencode.QREncoder.code">
+<tt class="descname">code</tt><a class="headerlink" href="#libqrencode.qrencode.QREncoder.code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the QREncode object</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="libqrencode.qrencode.QREncoder.eightbit">
+<tt class="descname">eightbit</tt><a class="headerlink" href="#libqrencode.qrencode.QREncoder.eightbit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the QREncoder&#8217;s eightbit property.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="libqrencode.qrencode.QREncoder.encode">
+<tt class="descname">encode</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#QREncoder.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.QREncoder.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode input string represented by data</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="libqrencode.qrencode.QREncoder.hint">
+<tt class="descname">hint</tt><a class="headerlink" href="#libqrencode.qrencode.QREncoder.hint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the QREncoder&#8217;s hint.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="libqrencode.qrencode.QREncoder.level">
+<tt class="descname">level</tt><a class="headerlink" href="#libqrencode.qrencode.QREncoder.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the QREncoder&#8217;s level.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="libqrencode.qrencode.QREncoder.micro">
+<tt class="descname">micro</tt><a class="headerlink" href="#libqrencode.qrencode.QREncoder.micro" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the QREncoder&#8217;s micro property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="libqrencode.qrencode.QREncoder.version">
+<tt class="descname">version</tt><a class="headerlink" href="#libqrencode.qrencode.QREncoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the QREncoder&#8217;s symbol version property.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="libqrencode.qrencode.StructuredQREncoder">
+<em class="property">class </em><tt class="descclassname">libqrencode.qrencode.</tt><tt class="descname">StructuredQREncoder</tt><a class="reference internal" href="_modules/libqrencode/qrencode.html#StructuredQREncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.StructuredQREncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclassing of QREncoder for structured QR encoding.</p>
+<dl class="method">
+<dt id="libqrencode.qrencode.StructuredQREncoder.as2dlists">
+<tt class="descname">as2dlists</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#StructuredQREncoder.as2dlists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.StructuredQREncoder.as2dlists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of list of lists describing the encoded data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="libqrencode.qrencode.StructuredQREncoder.asciipreview">
+<tt class="descname">asciipreview</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#StructuredQREncoder.asciipreview"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.StructuredQREncoder.asciipreview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print an ascii representation of the Encoder output to stdout</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="libqrencode.qrencode.StructuredQREncoder.asps">
+<tt class="descname">asps</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#StructuredQREncoder.asps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.StructuredQREncoder.asps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of PostScript strings representing the encoded 
+QRCode&#8217;s of the StructuredQREncoder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="libqrencode.qrencode.StructuredQREncoder.code_list">
+<tt class="descname">code_list</tt><a class="headerlink" href="#libqrencode.qrencode.StructuredQREncoder.code_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return StructuredQREncoder&#8217;s code_list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="libqrencode.qrencode.StructuredQREncoder.encode">
+<tt class="descname">encode</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#StructuredQREncoder.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.StructuredQREncoder.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode input string represented by data</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="libqrencode.qrencode.call">
+<tt class="descclassname">libqrencode.qrencode.</tt><tt class="descname">call</tt><big>(</big><em>func</em>, <em>*args</em><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience routine to call function func, check for NULL pointer and
+subsequently check errno to report useful error message.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="libqrencode.qrencode.main">
+<tt class="descclassname">libqrencode.qrencode.</tt><tt class="descname">main</tt><big>(</big><em>argv</em><big>)</big><a class="reference internal" href="_modules/libqrencode/qrencode.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="libqrencode.qrencode.Error">
+<em class="property">exception </em><tt class="descclassname">libqrencode.qrencode.</tt><tt class="descname">Error</tt><a class="reference internal" href="_modules/libqrencode/qrencode.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#libqrencode.qrencode.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a user-defined exception for errors raised by this module.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="pre-requisites">
+<h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this headline">¶</a></h2>
+<p>Python (<a class="reference external" href="http://www.python.org">http://www.python.org</a>)</p>
+<p>libqrencode (<a class="reference external" href="http://fukuchi.org/works/qrencode/index.html.en">http://fukuchi.org/works/qrencode/index.html.en</a>)</p>
+<p>Python Imaging Library (PIL, <a class="reference external" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a>) (optional)</p>
+</div>
+<div class="section" id="known-issues">
+<h2>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>For the moment the bindings have only be constructed for use under linux. I could be tempted to support windows if required.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">libqrencode.qrencode</span></tt> &#8211; QR Encoding</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#scripted-usage">Scripted Usage</a></li>
+<li><a class="reference internal" href="#module-usage">Module Usage</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li><a class="reference internal" href="#pre-requisites">Pre-requisites</a></li>
+<li><a class="reference internal" href="#known-issues">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">libqrencode</span></tt> &#8211; Python Bindings to libqrencode</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="_qrencode.html"
+                        title="next chapter"><tt class="docutils literal docutils literal"><span class="pre">libqrencode._qrencode</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/qrencode.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="_qrencode.html" title="libqrencode._qrencode"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="libqrencode – Python Bindings to libqrencode"
+             >previous</a> |</li>
+        <li><a href="index.html">libqrencode ctypes bindings 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Matthew Baker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
