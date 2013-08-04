@@ -1,0 +1,207 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sp.ssim &mdash; Signal Processing Library 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Signal Processing Library 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for sp.ssim</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;Module providing functionality to implement Structural Similarity Image </span>
+<span class="sd">Quality Assessment. Based on original paper by Z. Whang</span>
+<span class="sd">&quot;Image Quality Assessment: From Error Visibility to Structural Similarity&quot; IEEE</span>
+<span class="sd">Transactions on Image Processing Vol. 13. No. 4. April 2004.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
+
+<span class="kn">import</span> <span class="nn">gauss</span>
+
+
+<div class="viewcode-block" id="ssim"><a class="viewcode-back" href="../../ssim.html#sp.ssim.ssim">[docs]</a><span class="k">def</span> <span class="nf">ssim</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">,</span> <span class="n">cs_map</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the Structural Similarity Map corresponding to input images img1 </span>
+<span class="sd">    and img2 (images are assumed to be uint8)</span>
+<span class="sd">    </span>
+<span class="sd">    This function attempts to mimic precisely the functionality of ssim.m a </span>
+<span class="sd">    MATLAB provided by the author&#39;s of SSIM</span>
+<span class="sd">    https://ece.uwaterloo.ca/~z70wang/research/ssim/ssim_index.m</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img1</span> <span class="o">=</span> <span class="n">img1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">img2</span> <span class="o">=</span> <span class="n">img2</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="n">gauss</span><span class="o">.</span><span class="n">fspecial_gauss</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+    <span class="n">K1</span> <span class="o">=</span> <span class="mf">0.01</span>
+    <span class="n">K2</span> <span class="o">=</span> <span class="mf">0.03</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="mi">255</span> <span class="c">#bitdepth of image</span>
+    <span class="n">C1</span> <span class="o">=</span> <span class="p">(</span><span class="n">K1</span><span class="o">*</span><span class="n">L</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">C2</span> <span class="o">=</span> <span class="p">(</span><span class="n">K2</span><span class="o">*</span><span class="n">L</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">mu1</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">fftconvolve</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">img1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;valid&#39;</span><span class="p">)</span>
+    <span class="n">mu2</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">fftconvolve</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">img2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;valid&#39;</span><span class="p">)</span>
+    <span class="n">mu1_sq</span> <span class="o">=</span> <span class="n">mu1</span><span class="o">*</span><span class="n">mu1</span>
+    <span class="n">mu2_sq</span> <span class="o">=</span> <span class="n">mu2</span><span class="o">*</span><span class="n">mu2</span>
+    <span class="n">mu1_mu2</span> <span class="o">=</span> <span class="n">mu1</span><span class="o">*</span><span class="n">mu2</span>
+    <span class="n">sigma1_sq</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">fftconvolve</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">img1</span><span class="o">*</span><span class="n">img1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;valid&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu1_sq</span>
+    <span class="n">sigma2_sq</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">fftconvolve</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">img2</span><span class="o">*</span><span class="n">img2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;valid&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu2_sq</span>
+    <span class="n">sigma12</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">fftconvolve</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">img1</span><span class="o">*</span><span class="n">img2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;valid&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu1_mu2</span>
+    <span class="k">if</span> <span class="n">cs_map</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(((</span><span class="mi">2</span><span class="o">*</span><span class="n">mu1_mu2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sigma12</span> <span class="o">+</span> <span class="n">C2</span><span class="p">))</span><span class="o">/</span><span class="p">((</span><span class="n">mu1_sq</span> <span class="o">+</span> <span class="n">mu2_sq</span> <span class="o">+</span> <span class="n">C1</span><span class="p">)</span><span class="o">*</span>
+                    <span class="p">(</span><span class="n">sigma1_sq</span> <span class="o">+</span> <span class="n">sigma2_sq</span> <span class="o">+</span> <span class="n">C2</span><span class="p">)),</span> 
+                <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">sigma12</span> <span class="o">+</span> <span class="n">C2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">sigma1_sq</span> <span class="o">+</span> <span class="n">sigma2_sq</span> <span class="o">+</span> <span class="n">C2</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">mu1_mu2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sigma12</span> <span class="o">+</span> <span class="n">C2</span><span class="p">))</span><span class="o">/</span><span class="p">((</span><span class="n">mu1_sq</span> <span class="o">+</span> <span class="n">mu2_sq</span> <span class="o">+</span> <span class="n">C1</span><span class="p">)</span><span class="o">*</span>
+                    <span class="p">(</span><span class="n">sigma1_sq</span> <span class="o">+</span> <span class="n">sigma2_sq</span> <span class="o">+</span> <span class="n">C2</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="msssim"><a class="viewcode-back" href="../../ssim.html#sp.ssim.msssim">[docs]</a><span class="k">def</span> <span class="nf">msssim</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function implements Multi-Scale Structural Similarity (MSSSIM) Image </span>
+<span class="sd">    Quality Assessment according to Z. Wang&#39;s &quot;Multi-scale structural similarity </span>
+<span class="sd">    for image quality assessment&quot; Invited Paper, IEEE Asilomar Conference on </span>
+<span class="sd">    Signals, Systems and Computers, Nov. 2003 </span>
+<span class="sd">    </span>
+<span class="sd">    Author&#39;s MATLAB implementation:-</span>
+<span class="sd">    http://www.cns.nyu.edu/~lcv/ssim/msssim.zip</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0448</span><span class="p">,</span> <span class="mf">0.2856</span><span class="p">,</span> <span class="mf">0.3001</span><span class="p">,</span> <span class="mf">0.2363</span><span class="p">,</span> <span class="mf">0.1333</span><span class="p">])</span>
+    <span class="n">downsample_filter</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="mf">4.0</span>
+    <span class="n">im1</span> <span class="o">=</span> <span class="n">img1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">im2</span> <span class="o">=</span> <span class="n">img2</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">mssim</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="n">mcs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
+        <span class="n">ssim_map</span><span class="p">,</span> <span class="n">cs_map</span> <span class="o">=</span> <span class="n">ssim</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">im2</span><span class="p">,</span> <span class="n">cs_map</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">mssim</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mssim</span><span class="p">,</span> <span class="n">ssim_map</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">mcs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">cs_map</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">filtered_im1</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">downsample_filter</span><span class="p">,</span> 
+                                                <span class="n">mode</span><span class="o">=</span><span class="s">&#39;reflect&#39;</span><span class="p">)</span>
+        <span class="n">filtered_im2</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">downsample_filter</span><span class="p">,</span> 
+                                                <span class="n">mode</span><span class="o">=</span><span class="s">&#39;reflect&#39;</span><span class="p">)</span>
+        <span class="n">im1</span> <span class="o">=</span> <span class="n">filtered_im1</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span> <span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">im2</span> <span class="o">=</span> <span class="n">filtered_im2</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span> <span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mcs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">level</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="n">weight</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">level</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span>
+                    <span class="p">(</span><span class="n">mssim</span><span class="p">[</span><span class="n">level</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="n">weight</span><span class="p">[</span><span class="n">level</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+</div>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Compute the SSIM index on two input images specified on the cmd line.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">pylab</span>
+    <span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&#39;usage: python -m sp.ssim image1.tif image2.tif&#39;</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+        <span class="n">img1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">img2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="s">&#39;Cannot load images&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">e</span>
+
+    <span class="n">ssim_map</span> <span class="o">=</span> <span class="n">ssim</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">)</span>
+    <span class="n">ms_ssim</span> <span class="o">=</span> <span class="n">msssim</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">)</span>
+
+    <span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Image1&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Image2&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;SSIM Map</span><span class="se">\n</span><span class="s"> SSIM: </span><span class="si">%f</span><span class="se">\n</span><span class="s"> MSSSIM: </span><span class="si">%f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ssim_map</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">ms_ssim</span><span class="p">))</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ssim_map</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Matthew Baker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

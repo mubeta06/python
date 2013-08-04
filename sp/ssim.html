@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sp.ssim &mdash; Signal Processing Library 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Signal Processing Library 1.0 documentation" href="index.html" />
+    <link rel="prev" title="sp.multirate" href="multirate.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multirate.html" title="sp.multirate"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-sp.ssim">
+<span id="sp-ssim"></span><h1>sp.ssim<a class="headerlink" href="#module-sp.ssim" title="Permalink to this headline">¶</a></h1>
+<p>Module providing functionality to implement Structural Similarity Image 
+Quality Assessment. Based on original paper by Z. Whang
+&#8220;Image Quality Assessment: From Error Visibility to Structural Similarity&#8221; IEEE
+Transactions on Image Processing Vol. 13. No. 4. April 2004.</p>
+<div class="section" id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ssim">
+<h3>ssim<a class="headerlink" href="#ssim" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">ssim</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">einstein</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/einstein.tif&#39;</span><span class="p">))</span>
+<span class="n">meanshift</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/meanshift.tif&#39;</span><span class="p">))</span>
+<span class="n">contrast</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/contrast.tif&#39;</span><span class="p">))</span>
+<span class="n">impulse</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/impulse.tif&#39;</span><span class="p">))</span>
+<span class="n">blur</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/blur.tif&#39;</span><span class="p">))</span>
+<span class="n">jpg</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/jpg.tif&#39;</span><span class="p">))</span>
+<span class="n">einstein_ssim</span> <span class="o">=</span> <span class="n">ssim</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">einstein</span><span class="p">,</span> <span class="n">einstein</span><span class="p">)</span>
+<span class="n">meanshift_ssim</span> <span class="o">=</span> <span class="n">ssim</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">einstein</span><span class="p">,</span> <span class="n">meanshift</span><span class="p">)</span>
+<span class="n">contrast_ssim</span> <span class="o">=</span> <span class="n">ssim</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">einstein</span><span class="p">,</span> <span class="n">contrast</span><span class="p">)</span>
+<span class="n">impulse_ssim</span> <span class="o">=</span> <span class="n">ssim</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">einstein</span><span class="p">,</span> <span class="n">impulse</span><span class="p">)</span>
+<span class="n">blur_ssim</span> <span class="o">=</span> <span class="n">ssim</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">einstein</span><span class="p">,</span> <span class="n">blur</span><span class="p">)</span>
+<span class="n">jpg_ssim</span> <span class="o">=</span> <span class="n">ssim</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">einstein</span><span class="p">,</span> <span class="n">jpg</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original</span><span class="se">\n</span><span class="s"> SSIM </span><span class="si">%.3f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">einstein_ssim</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">einstein</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Mean-Shifted</span><span class="se">\n</span><span class="s"> SSIM </span><span class="si">%.3f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">meanshift_ssim</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">meanshift</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Contrast-Adjusted</span><span class="se">\n</span><span class="s"> SSIM </span><span class="si">%.3f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">contrast_ssim</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">contrast</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Impulse-Noise</span><span class="se">\n</span><span class="s"> SSIM </span><span class="si">%.3f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">impulse_ssim</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">impulse</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Blur</span><span class="se">\n</span><span class="s"> SSIM </span><span class="si">%.3f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">blur_ssim</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">blur</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;JPG</span><span class="se">\n</span><span class="s"> SSIM </span><span class="si">%.3f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">jpg_ssim</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">jpg</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//ssim-1.py">Source code</a>, <a class="reference external" href=".//ssim-1.png">png</a>, <a class="reference external" href=".//ssim-1.hires.png">hires.png</a>, <a class="reference external" href=".//ssim-1.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/ssim-1.png" src="_images/ssim-1.png" />
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">ssim</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">original</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/building.tif&#39;</span><span class="p">))</span>
+<span class="n">jpg</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/building_jpg.tif&#39;</span><span class="p">))</span>
+<span class="n">ssim_map</span> <span class="o">=</span> <span class="n">ssim</span><span class="o">.</span><span class="n">ssim</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">jpg</span><span class="p">)</span>
+<span class="n">abs_map</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">original</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float64&#39;</span><span class="p">)</span><span class="o">-</span><span class="n">jpg</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float64&#39;</span><span class="p">))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;JPEG compressed&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">jpg</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Absolute error map&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">abs_map</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;uint8&#39;</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;SSIM index map&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ssim_map</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//ssim-2.py">Source code</a>, <a class="reference external" href=".//ssim-2.png">png</a>, <a class="reference external" href=".//ssim-2.hires.png">hires.png</a>, <a class="reference external" href=".//ssim-2.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/ssim-2.png" src="_images/ssim-2.png" />
+</div>
+</div>
+<div class="section" id="msssim">
+<h3>msssim<a class="headerlink" href="#msssim" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">ssim</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">einstein</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/einstein.tif&#39;</span><span class="p">))</span>
+<span class="n">impulse</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;./imgs/impulse.tif&#39;</span><span class="p">))</span>
+<span class="n">ms_ssim</span> <span class="o">=</span> <span class="n">ssim</span><span class="o">.</span><span class="n">msssim</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">impulse</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Impulse-Noise</span><span class="se">\n</span><span class="s"> </span><span class="si">%.3f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">ms_ssim</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">impulse</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">())</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//ssim-3.py">Source code</a>, <a class="reference external" href=".//ssim-3.png">png</a>, <a class="reference external" href=".//ssim-3.hires.png">hires.png</a>, <a class="reference external" href=".//ssim-3.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/ssim-3.png" src="_images/ssim-3.png" />
+</div>
+<p>See the individual methods below for further details.</p>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="sp.ssim.ssim">
+<tt class="descclassname">sp.ssim.</tt><tt class="descname">ssim</tt><big>(</big><em>img1</em>, <em>img2</em>, <em>cs_map=False</em><big>)</big><a class="reference internal" href="_modules/sp/ssim.html#ssim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.ssim.ssim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Structural Similarity Map corresponding to input images img1 
+and img2 (images are assumed to be uint8)</p>
+<p>This function attempts to mimic precisely the functionality of ssim.m a 
+MATLAB provided by the author&#8217;s of SSIM
+<a class="reference external" href="https://ece.uwaterloo.ca/~z70wang/research/ssim/ssim_index.m">https://ece.uwaterloo.ca/~z70wang/research/ssim/ssim_index.m</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.ssim.msssim">
+<tt class="descclassname">sp.ssim.</tt><tt class="descname">msssim</tt><big>(</big><em>img1</em>, <em>img2</em><big>)</big><a class="reference internal" href="_modules/sp/ssim.html#msssim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.ssim.msssim" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function implements Multi-Scale Structural Similarity (MSSSIM) Image 
+Quality Assessment according to Z. Wang&#8217;s &#8220;Multi-scale structural similarity 
+for image quality assessment&#8221; Invited Paper, IEEE Asilomar Conference on 
+Signals, Systems and Computers, Nov. 2003</p>
+<p>Author&#8217;s MATLAB implementation:-
+<a class="reference external" href="http://www.cns.nyu.edu/~lcv/ssim/msssim.zip">http://www.cns.nyu.edu/~lcv/ssim/msssim.zip</a></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">sp.ssim</a><ul>
+<li><a class="reference internal" href="#example-usage">Example Usage</a><ul>
+<li><a class="reference internal" href="#ssim">ssim</a></li>
+<li><a class="reference internal" href="#msssim">msssim</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="multirate.html"
+                        title="previous chapter">sp.multirate</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ssim.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multirate.html" title="sp.multirate"
+             >previous</a> |</li>
+        <li><a href="index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Matthew Baker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

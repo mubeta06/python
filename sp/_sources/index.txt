@@ -17,6 +17,7 @@ Contents:
    gold
    mls
    multirate
+   ssim
 
 Indices and tables
 ==================
