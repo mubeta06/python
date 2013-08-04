@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sp.multirate &mdash; Signal Processing Library 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Signal Processing Library 1.0 documentation" href="index.html" />
+    <link rel="prev" title="sp.mls" href="mls.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mls.html" title="sp.mls"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-sp.multirate">
+<span id="sp-multirate"></span><h1>sp.multirate<a class="headerlink" href="#module-sp.multirate" title="Permalink to this headline">¶</a></h1>
+<p>Module providing Multirate signal processing functionality.
+Largely based on MATLAB&#8217;s Multirate signal processing toolbox with consultation 
+of Octave m-file source code.</p>
+<div class="section" id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="downsample">
+<h3>downsample<a class="headerlink" href="#downsample" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">multirate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">multirate</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">array([ 1,  4,  7, 10])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">multirate</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">array([3, 6, 9])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="upsample">
+<h3>upsample<a class="headerlink" href="#upsample" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">multirate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">multirate</span><span class="o">.</span><span class="n">upsample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">array([ 1.,  0.,  0.,  2.,  0.,  0.,  3.,  0.,  0.,  4.,  0.,  0.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">multirate</span><span class="o">.</span><span class="n">upsample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">array([ 0.,  0.,  1.,  0.,  0.,  2.,  0.,  0.,  3.,  0.,  0.,  4.])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="decimate">
+<h3>decimate<a class="headerlink" href="#decimate" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">multirate</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.00025</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">30</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">multirate</span><span class="o">.</span><span class="n">decimate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Signal&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">120</span><span class="p">])),</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">120</span><span class="p">])</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Decimated Signal&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">])),</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">])</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//multirate-1.py">Source code</a>, <a class="reference external" href=".//multirate-1.png">png</a>, <a class="reference external" href=".//multirate-1.hires.png">hires.png</a>, <a class="reference external" href=".//multirate-1.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/multirate-1.png" src="_images/multirate-1.png" />
+</div>
+</div>
+<div class="section" id="interp">
+<h3>interp<a class="headerlink" href="#interp" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">multirate</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">30</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Signal&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">])),</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">])</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Interpolated Signal&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">120</span><span class="p">])),</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">120</span><span class="p">])</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//multirate-2.py">Source code</a>, <a class="reference external" href=".//multirate-2.png">png</a>, <a class="reference external" href=".//multirate-2.hires.png">hires.png</a>, <a class="reference external" href=".//multirate-2.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/multirate-2.png" src="_images/multirate-2.png" />
+</div>
+</div>
+<div class="section" id="upfirdn">
+<h3>upfirdn<a class="headerlink" href="#upfirdn" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">multirate</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mf">147.0</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mf">160.0</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mf">24.0</span><span class="o">*</span><span class="n">L</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">firwin</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">M</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;kaiser&#39;</span><span class="p">,</span> <span class="mf">7.8562</span><span class="p">))</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">L</span><span class="o">*</span><span class="n">h</span>
+<span class="n">Fs</span> <span class="o">=</span> <span class="mf">48000.0</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10239</span><span class="p">)</span>
+<span class="n">x</span>  <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">1000</span><span class="o">/</span><span class="n">Fs</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">multirate</span><span class="o">.</span><span class="n">upfirdn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">49</span><span class="p">]</span><span class="o">/</span><span class="n">Fs</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">49</span><span class="p">])</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">45</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">Fs</span><span class="o">*</span><span class="n">L</span><span class="o">/</span><span class="n">M</span><span class="p">),</span> <span class="n">y</span><span class="p">[</span><span class="mi">13</span><span class="p">:</span><span class="mi">57</span><span class="p">],</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="n">markerfmt</span><span class="o">=</span><span class="s">&#39;ro&#39;</span><span class="p">,)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Time (sec)&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;Signal value&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//multirate-3.py">Source code</a>, <a class="reference external" href=".//multirate-3.png">png</a>, <a class="reference external" href=".//multirate-3.hires.png">hires.png</a>, <a class="reference external" href=".//multirate-3.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/multirate-3.png" src="_images/multirate-3.png" />
+</div>
+</div>
+<div class="section" id="resample">
+<h3>resample<a class="headerlink" href="#resample" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">multirate</span>
+<span class="n">fs1</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">fs1</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">fs1</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">t1</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">multirate</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span><span class="o">*</span><span class="mf">2.0</span><span class="o">/</span><span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="n">fs1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&#39;*&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span> <span class="s">&#39;:&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="s">&#39;original&#39;</span><span class="p">,</span><span class="s">&#39;resampled&#39;</span><span class="p">),</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//multirate-4.py">Source code</a>, <a class="reference external" href=".//multirate-4.png">png</a>, <a class="reference external" href=".//multirate-4.hires.png">hires.png</a>, <a class="reference external" href=".//multirate-4.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/multirate-4.png" src="_images/multirate-4.png" />
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">multirate</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">multirate</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Edge Effects Not Noticeable&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">19</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&#39;*&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">29</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">/</span><span class="mf">3.0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="s">&#39;original&#39;</span><span class="p">,</span> <span class="s">&#39;resampled&#39;</span><span class="p">),</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">)])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">multirate</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">19</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&#39;*&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">29</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">/</span><span class="mf">3.0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Edge Effects Very Noticeable&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="s">&#39;original&#39;</span><span class="p">,</span> <span class="s">&#39;resampled&#39;</span><span class="p">),</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//multirate-5.py">Source code</a>, <a class="reference external" href=".//multirate-5.png">png</a>, <a class="reference external" href=".//multirate-5.hires.png">hires.png</a>, <a class="reference external" href=".//multirate-5.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/multirate-5.png" src="_images/multirate-5.png" />
+</div>
+<p>See the individual methods below for further details.</p>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="sp.multirate.downsample">
+<tt class="descclassname">sp.multirate.</tt><tt class="descname">downsample</tt><big>(</big><em>s</em>, <em>n</em>, <em>phase=0</em><big>)</big><a class="reference internal" href="_modules/sp/multirate.html#downsample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.multirate.downsample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrease sampling rate by integer factor n with included offset phase.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.multirate.upsample">
+<tt class="descclassname">sp.multirate.</tt><tt class="descname">upsample</tt><big>(</big><em>s</em>, <em>n</em>, <em>phase=0</em><big>)</big><a class="reference internal" href="_modules/sp/multirate.html#upsample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.multirate.upsample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase sampling rate by integer factor n  with included offset phase.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.multirate.decimate">
+<tt class="descclassname">sp.multirate.</tt><tt class="descname">decimate</tt><big>(</big><em>s</em>, <em>r</em>, <em>n=None</em>, <em>fir=False</em><big>)</big><a class="reference internal" href="_modules/sp/multirate.html#decimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.multirate.decimate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decimation - decrease sampling rate by r. The decimation process filters 
+the input data s with an order n lowpass filter and then resamples the 
+resulting smoothed signal at a lower rate. By default, decimate employs an 
+eighth-order lowpass Chebyshev Type I filter with a cutoff frequency of 
+0.8/r. It filters the input sequence in both the forward and reverse 
+directions to remove all phase distortion, effectively doubling the filter 
+order. If &#8216;fir&#8217; is set to True decimate uses an order 30 FIR filter (by 
+default otherwise n), instead of the Chebyshev IIR filter. Here decimate 
+filters the input sequence in only one direction. This technique conserves 
+memory and is useful for working with long sequences.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.multirate.interp">
+<tt class="descclassname">sp.multirate.</tt><tt class="descname">interp</tt><big>(</big><em>s</em>, <em>r</em>, <em>l=4</em>, <em>alpha=0.5</em><big>)</big><a class="reference internal" href="_modules/sp/multirate.html#interp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.multirate.interp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolation - increase sampling rate by integer factor r. Interpolation 
+increases the original sampling rate for a sequence to a higher rate. interp
+performs lowpass interpolation by inserting zeros into the original sequence
+and then applying a special lowpass filter. l specifies the filter length 
+and alpha the cut-off frequency. The length of the FIR lowpass interpolating
+filter is 2*l*r+1. The number of original sample values used for 
+interpolation is 2*l. Ordinarily, l should be less than or equal to 10. The 
+original signal is assumed to be band limited with normalized cutoff 
+frequency 0=alpha=1, where 1 is half the original sampling frequency (the 
+Nyquist frequency). The default value for l is 4 and the default value for 
+alpha is 0.5.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.multirate.upfirdn">
+<tt class="descclassname">sp.multirate.</tt><tt class="descname">upfirdn</tt><big>(</big><em>s</em>, <em>h</em>, <em>p</em>, <em>q</em><big>)</big><a class="reference internal" href="_modules/sp/multirate.html#upfirdn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.multirate.upfirdn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsample signal s by p, apply FIR filter as specified by h, and 
+downsample by q. Using fftconvolve as opposed to lfilter as it does not seem
+to do a full convolution operation (and its much faster than convolve).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.multirate.resample">
+<tt class="descclassname">sp.multirate.</tt><tt class="descname">resample</tt><big>(</big><em>s</em>, <em>p</em>, <em>q</em>, <em>h=None</em><big>)</big><a class="reference internal" href="_modules/sp/multirate.html#resample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.multirate.resample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change sampling rate by rational factor. This implementation is based on
+the Octave implementation of the resample function. It designs the 
+anti-aliasing filter using the window approach applying a Kaiser window with
+the beta term calculated as specified by [2].</p>
+<p>Ref [1] J. G. Proakis and D. G. Manolakis,
+Digital Signal Processing: Principles, Algorithms, and Applications,
+4th ed., Prentice Hall, 2007. Chap. 6</p>
+<p>Ref [2] A. V. Oppenheim, R. W. Schafer and J. R. Buck, 
+Discrete-time signal processing, Signal processing series,
+Prentice-Hall, 1999</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">sp.multirate</a><ul>
+<li><a class="reference internal" href="#example-usage">Example Usage</a><ul>
+<li><a class="reference internal" href="#downsample">downsample</a></li>
+<li><a class="reference internal" href="#upsample">upsample</a></li>
+<li><a class="reference internal" href="#decimate">decimate</a></li>
+<li><a class="reference internal" href="#interp">interp</a></li>
+<li><a class="reference internal" href="#upfirdn">upfirdn</a></li>
+<li><a class="reference internal" href="#resample">resample</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mls.html"
+                        title="previous chapter">sp.mls</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/multirate.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mls.html" title="sp.mls"
+             >previous</a> |</li>
+        <li><a href="index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Matthew Baker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

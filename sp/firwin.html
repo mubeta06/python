@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sp.firwin &mdash; Signal Processing Library 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Signal Processing Library 1.0 documentation" href="index.html" />
+    <link rel="next" title="sp.gauss" href="gauss.html" />
+    <link rel="prev" title="sp.filter" href="filter.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="gauss.html" title="sp.gauss"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="filter.html" title="sp.filter"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-sp.firwin">
+<span id="sp-firwin"></span><h1>sp.firwin<a class="headerlink" href="#module-sp.firwin" title="Permalink to this headline">¶</a></h1>
+<p>Module to design window based fir filter and analyse the frequency response 
+of fir filters.</p>
+<p>This implementation is largely based on Chapter 16 of The Scientist and 
+Engineer&#8217;s Guide to Digital Signal Processing Second Edition.</p>
+<div class="section" id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="building-a-lowpass-filter">
+<h3>Building a Lowpass Filter<a class="headerlink" href="#building-a-lowpass-filter" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">firwin</span>
+
+<span class="n">f0</span> <span class="o">=</span> <span class="mi">20</span> <span class="c">#20Hz</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c"># i.e. sampling frequency is 1/ts = 100Hz</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">1.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c">#build filter</span>
+<span class="c">#Low pass</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mi">100</span> <span class="c">#number of taps in filter</span>
+<span class="n">fc</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="c">#i.e. normalised cutoff frequency 1/4 of sampling rate i.e. 25Hz</span>
+<span class="n">lp</span> <span class="o">=</span> <span class="n">firwin</span><span class="o">.</span><span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">firwin</span><span class="o">.</span><span class="n">blackman</span><span class="p">)</span>
+
+<span class="c">#filter the signal</span>
+<span class="n">filtered</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">lp</span><span class="p">)</span>
+
+<span class="c">#plotting</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Spectrum&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filter Frequency Response&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">lp</span><span class="p">)</span>
+<span class="c">#window and fft</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filtered Spectrum&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">firwin</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filtered</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">filtered</span><span class="p">))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//firwin-1.py">Source code</a>, <a class="reference external" href=".//firwin-1.png">png</a>, <a class="reference external" href=".//firwin-1.hires.png">hires.png</a>, <a class="reference external" href=".//firwin-1.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/firwin-1.png" src="_images/firwin-1.png" />
+</div>
+</div>
+<div class="section" id="building-a-highpass-filter">
+<h3>Building a Highpass Filter<a class="headerlink" href="#building-a-highpass-filter" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">firwin</span>
+
+<span class="n">f0</span> <span class="o">=</span> <span class="mi">20</span> <span class="c">#20Hz</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c"># i.e. sampling frequency is 1/ts = 100Hz</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">1.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c">#build filter</span>
+<span class="c">#First build a Lowpass filter</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mi">100</span> <span class="c">#number of taps in filter</span>
+<span class="n">fc</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="c">#i.e. normalised cutoff frequency 1/4 of sampling rate i.e. 25Hz</span>
+<span class="n">lp</span> <span class="o">=</span> <span class="n">firwin</span><span class="o">.</span><span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">firwin</span><span class="o">.</span><span class="n">blackman</span><span class="p">)</span>
+<span class="c">#next build Highpass filter by shifting frequency domain</span>
+<span class="n">shift</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">hp</span> <span class="o">=</span> <span class="n">lp</span><span class="o">*</span><span class="n">shift</span>
+
+<span class="c">#filter the signal</span>
+<span class="n">filtered</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">hp</span><span class="p">)</span>
+
+<span class="c">#plotting</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Spectrum&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filter Frequency Response&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">hp</span><span class="p">)</span>
+<span class="c">#window and fft</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filtered Spectrum&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">firwin</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filtered</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">filtered</span><span class="p">))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//firwin-2.py">Source code</a>, <a class="reference external" href=".//firwin-2.png">png</a>, <a class="reference external" href=".//firwin-2.hires.png">hires.png</a>, <a class="reference external" href=".//firwin-2.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/firwin-2.png" src="_images/firwin-2.png" />
+</div>
+</div>
+<div class="section" id="building-a-bandpass-filter">
+<h3>Building a Bandpass Filter<a class="headerlink" href="#building-a-bandpass-filter" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">firwin</span>
+
+<span class="n">f0</span> <span class="o">=</span> <span class="mi">20</span> <span class="c">#20Hz</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c"># i.e. sampling frequency is 1/ts = 100Hz</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">1.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c">#build filter</span>
+<span class="c">#first need a low-pass with fc 0.35</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mi">100</span> <span class="c">#number of taps in filter</span>
+<span class="n">fc</span> <span class="o">=</span> <span class="mf">0.35</span>
+<span class="n">lp</span> <span class="o">=</span> <span class="n">firwin</span><span class="o">.</span><span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">firwin</span><span class="o">.</span><span class="n">blackman</span><span class="p">)</span>
+<span class="n">shift</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">hp</span> <span class="o">=</span> <span class="n">lp</span><span class="o">*</span><span class="n">shift</span>
+<span class="c">#now we can create the bandpass filter by convolution</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span> <span class="n">hp</span><span class="p">)</span>
+
+<span class="c">#filter the signal</span>
+<span class="n">filtered</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">bp</span><span class="p">)</span>
+
+<span class="c">#plotting</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Spectrum&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filter Frequency Response&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
+<span class="c">#window and fft</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filtered Spectrum&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">firwin</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filtered</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">filtered</span><span class="p">))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//firwin-3.py">Source code</a>, <a class="reference external" href=".//firwin-3.png">png</a>, <a class="reference external" href=".//firwin-3.hires.png">hires.png</a>, <a class="reference external" href=".//firwin-3.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/firwin-3.png" src="_images/firwin-3.png" />
+</div>
+</div>
+<div class="section" id="building-a-bandstop-filter">
+<h3>Building a Bandstop Filter<a class="headerlink" href="#building-a-bandstop-filter" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">firwin</span>
+
+<span class="n">f0</span> <span class="o">=</span> <span class="mi">20</span> <span class="c">#20Hz</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c"># i.e. sampling frequency is 1/ts = 100Hz</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">1.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c">#build filter</span>
+<span class="c">#first need a low-pass with fc 0.15</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mi">100</span> <span class="c">#number of taps in filter</span>
+<span class="n">fc</span> <span class="o">=</span> <span class="mf">0.15</span>
+<span class="n">lp</span> <span class="o">=</span> <span class="n">firwin</span><span class="o">.</span><span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">firwin</span><span class="o">.</span><span class="n">blackman</span><span class="p">)</span>
+<span class="c">#next need a high-pass</span>
+<span class="n">shift</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">hp</span> <span class="o">=</span> <span class="n">lp</span><span class="o">*</span><span class="n">shift</span>
+<span class="c">#now we can create the bandstop filter by adding the two impulse responses</span>
+<span class="n">bs</span> <span class="o">=</span> <span class="n">lp</span> <span class="o">+</span> <span class="n">hp</span>
+
+<span class="c">#filter the signal</span>
+<span class="n">filtered</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">bs</span><span class="p">)</span>
+
+<span class="c">#plotting</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Spectrum&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filter Frequency Response&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">bs</span><span class="p">)</span>
+<span class="c">#window and fft</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filtered Spectrum&#39;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+<span class="n">firwin</span><span class="o">.</span><span class="n">plot_fft</span><span class="p">(</span><span class="n">firwin</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filtered</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">filtered</span><span class="p">))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//firwin-4.py">Source code</a>, <a class="reference external" href=".//firwin-4.png">png</a>, <a class="reference external" href=".//firwin-4.hires.png">hires.png</a>, <a class="reference external" href=".//firwin-4.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/firwin-4.png" src="_images/firwin-4.png" />
+</div>
+<p>See the individual methods below for further details.</p>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="sp.firwin.blackman">
+<tt class="descclassname">sp.firwin.</tt><tt class="descname">blackman</tt><big>(</big><em>M</em><big>)</big><a class="reference internal" href="_modules/sp/firwin.html#blackman"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.firwin.blackman" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an M + 1 point symmetric point hamming window.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.firwin.build_filter">
+<tt class="descclassname">sp.firwin.</tt><tt class="descname">build_filter</tt><big>(</big><em>M</em>, <em>fc</em>, <em>window=None</em><big>)</big><a class="reference internal" href="_modules/sp/firwin.html#build_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.firwin.build_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct filter using the windowing method for filter parameters M
+number of taps, cut-off frequency fc and window. Window defaults to None 
+i.e. a rectangular window.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.firwin.hamming">
+<tt class="descclassname">sp.firwin.</tt><tt class="descname">hamming</tt><big>(</big><em>M</em><big>)</big><a class="reference internal" href="_modules/sp/firwin.html#hamming"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.firwin.hamming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an M + 1 point symmetric hamming window.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.firwin.plot_fft">
+<tt class="descclassname">sp.firwin.</tt><tt class="descname">plot_fft</tt><big>(</big><em>x</em>, <em>style='b'</em><big>)</big><a class="reference internal" href="_modules/sp/firwin.html#plot_fft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.firwin.plot_fft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience routine for plotting fft&#8217;s of signal with normalised 
+frequency axis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.firwin.sinc_filter">
+<tt class="descclassname">sp.firwin.</tt><tt class="descname">sinc_filter</tt><big>(</big><em>M</em>, <em>fc</em><big>)</big><a class="reference internal" href="_modules/sp/firwin.html#sinc_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.firwin.sinc_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an M + 1 point symmetric point sinc kernel with normalised cut-off 
+frequency fc 0-&gt;0.5.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">sp.firwin</a><ul>
+<li><a class="reference internal" href="#example-usage">Example Usage</a><ul>
+<li><a class="reference internal" href="#building-a-lowpass-filter">Building a Lowpass Filter</a></li>
+<li><a class="reference internal" href="#building-a-highpass-filter">Building a Highpass Filter</a></li>
+<li><a class="reference internal" href="#building-a-bandpass-filter">Building a Bandpass Filter</a></li>
+<li><a class="reference internal" href="#building-a-bandstop-filter">Building a Bandstop Filter</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="filter.html"
+                        title="previous chapter">sp.filter</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="gauss.html"
+                        title="next chapter">sp.gauss</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/firwin.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="gauss.html" title="sp.gauss"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="filter.html" title="sp.filter"
+             >previous</a> |</li>
+        <li><a href="index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Matthew Baker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

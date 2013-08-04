@@ -1,0 +1,175 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sp.mls &mdash; Signal Processing Library 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Signal Processing Library 1.0 documentation" href="index.html" />
+    <link rel="next" title="sp.multirate" href="multirate.html" />
+    <link rel="prev" title="sp.gold" href="gold.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multirate.html" title="sp.multirate"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gold.html" title="sp.gold"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-sp.mls">
+<span id="sp-mls"></span><h1>sp.mls<a class="headerlink" href="#module-sp.mls" title="Permalink to this headline">¶</a></h1>
+<p>Module providing the functionality to generate Maximal Length Sequences. 
+Based on wiki&#8217;s description and polynomial representation.
+<a class="reference external" href="http://en.wikipedia.org/wiki/Maximum_length_sequence">http://en.wikipedia.org/wiki/Maximum_length_sequence</a></p>
+<div class="section" id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mls">
+<h3>mls<a class="headerlink" href="#mls" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="n">mls</span>
+<span class="kn">from</span> <span class="nn">sp</span> <span class="kn">import</span> <span class="nb">filter</span>
+<span class="n">nbits</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">mls</span><span class="o">.</span><span class="n">mls</span><span class="p">(</span><span class="n">nbits</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s"> bit M-Sequence Periodic Autocorrelation&#39;</span> <span class="o">%</span> <span class="n">nbits</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">ccorr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="n">nbits</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//mls-1.py">Source code</a>, <a class="reference external" href=".//mls-1.png">png</a>, <a class="reference external" href=".//mls-1.hires.png">hires.png</a>, <a class="reference external" href=".//mls-1.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/mls-1.png" src="_images/mls-1.png" />
+</div>
+<p>See the individual methods below for further details.</p>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="sp.mls.mls">
+<tt class="descclassname">sp.mls.</tt><tt class="descname">mls</tt><big>(</big><em>n</em>, <em>seed=None</em><big>)</big><a class="reference internal" href="_modules/sp/mls.html#mls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.mls.mls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a Maximal Length Sequence 2^n - 1 bits long</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp.mls.lfsr">
+<tt class="descclassname">sp.mls.</tt><tt class="descname">lfsr</tt><big>(</big><em>taps</em>, <em>buf</em><big>)</big><a class="reference internal" href="_modules/sp/mls.html#lfsr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp.mls.lfsr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function implements a linear feedback shift register
+taps:   List of Polynomial exponents for non-zero terms other than 1 and n
+buf:    List of buffer initialisation values as 1&#8217;s and 0&#8217;s or booleans</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">sp.mls</a><ul>
+<li><a class="reference internal" href="#example-usage">Example Usage</a><ul>
+<li><a class="reference internal" href="#mls">mls</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gold.html"
+                        title="previous chapter">sp.gold</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="multirate.html"
+                        title="next chapter">sp.multirate</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/mls.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multirate.html" title="sp.multirate"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="gold.html" title="sp.gold"
+             >previous</a> |</li>
+        <li><a href="index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Matthew Baker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sp.firwin &mdash; Signal Processing Library 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Signal Processing Library 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for sp.firwin</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;Module to design window based fir filter and analyse the frequency response </span>
+<span class="sd">of fir filters.</span>
+
+<span class="sd">This implementation is largely based on Chapter 16 of The Scientist and </span>
+<span class="sd">Engineer&#39;s Guide to Digital Signal Processing Second Edition.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<div class="viewcode-block" id="hamming"><a class="viewcode-back" href="../../firwin.html#sp.firwin.hamming">[docs]</a><span class="k">def</span> <span class="nf">hamming</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an M + 1 point symmetric hamming window.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">M</span><span class="o">%</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;M must be even&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">0.54</span> <span class="o">-</span> <span class="mf">0.46</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">M</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="blackman"><a class="viewcode-back" href="../../firwin.html#sp.firwin.blackman">[docs]</a><span class="k">def</span> <span class="nf">blackman</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an M + 1 point symmetric point hamming window.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">M</span><span class="o">%</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;M must be even&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mf">0.42</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">M</span><span class="p">)</span> <span class="o">+</span> 
+            <span class="mf">0.08</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">M</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="sinc_filter"><a class="viewcode-back" href="../../firwin.html#sp.firwin.sinc_filter">[docs]</a><span class="k">def</span> <span class="nf">sinc_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an M + 1 point symmetric point sinc kernel with normalised cut-off </span>
+<span class="sd">    frequency fc 0-&gt;0.5.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">M</span><span class="o">%</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;M must be even&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">fc</span><span class="o">*</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">M</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="plot_fft"><a class="viewcode-back" href="../../firwin.html#sp.firwin.plot_fft">[docs]</a><span class="k">def</span> <span class="nf">plot_fft</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience routine for plotting fft&#39;s of signal with normalised </span>
+<span class="sd">    frequency axis.&quot;&quot;&quot;</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+                <span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="build_filter"><a class="viewcode-back" href="../../firwin.html#sp.firwin.build_filter">[docs]</a><span class="k">def</span> <span class="nf">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Construct filter using the windowing method for filter parameters M</span>
+<span class="sd">    number of taps, cut-off frequency fc and window. Window defaults to None </span>
+<span class="sd">    i.e. a rectangular window.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">window</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">sinc_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">sinc_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">)</span><span class="o">*</span><span class="n">window</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h</span><span class="o">/</span><span class="n">h</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</div>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">f0</span> <span class="o">=</span> <span class="mi">20</span> <span class="c">#20Hz</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c"># i.e. sampling frequency is 1/ts = 100Hz</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+    <span class="n">signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> 
+                <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">1.5</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+
+    <span class="c">#build up some filters</span>
+    <span class="c">#Low pass</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="mi">100</span> <span class="c">#number of taps in filter</span>
+    <span class="n">fc</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="c">#i.e. normalised cutoff frequency 1/4 of sampling rate i.e. 25Hz</span>
+    <span class="n">ham_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">hamming</span><span class="p">)</span>
+    <span class="n">black_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">blackman</span><span class="p">)</span>
+    <span class="n">rect_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">)</span>
+
+    <span class="c">#filter the signals</span>
+    <span class="n">f_ham</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">ham_lp</span><span class="p">)</span>
+    <span class="n">f_black</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">black_lp</span><span class="p">)</span>
+    <span class="n">f_rect</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">rect_lp</span><span class="p">)</span>
+
+    <span class="c">#plotting</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Spectrum&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Lowpass Filter Frequency Response&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">ham_lp</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">black_lp</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">rect_lp</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="s">&#39;Hamming&#39;</span><span class="p">,</span> <span class="s">&#39;Blackman&#39;</span><span class="p">,</span> <span class="s">&#39;Rectangular&#39;</span><span class="p">))</span>
+    <span class="c">#window and fft</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filtered Spectrum&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_ham</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_ham</span><span class="p">))</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_black</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_black</span><span class="p">),</span> <span class="s">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_rect</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_rect</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+
+    <span class="c">#High Pass</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">ham_hp</span> <span class="o">=</span> <span class="n">ham_lp</span><span class="o">*</span><span class="n">shift</span>
+    <span class="n">black_hp</span> <span class="o">=</span> <span class="n">black_lp</span><span class="o">*</span><span class="n">shift</span>
+    <span class="n">rect_hp</span> <span class="o">=</span> <span class="n">rect_lp</span><span class="o">*</span><span class="n">shift</span>
+
+    <span class="c">#filter the signals</span>
+    <span class="n">f_ham</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">ham_hp</span><span class="p">)</span>
+    <span class="n">f_black</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">black_hp</span><span class="p">)</span>
+    <span class="n">f_rect</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">rect_hp</span><span class="p">)</span>
+
+    <span class="c">#plotting</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Spectrum&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Highpass Filter Frequency Response&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">ham_hp</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">black_hp</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">rect_hp</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="s">&#39;Hamming&#39;</span><span class="p">,</span> <span class="s">&#39;Blackman&#39;</span><span class="p">,</span> <span class="s">&#39;Rectangular&#39;</span><span class="p">))</span>
+    <span class="c">#window and fft</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filtered Spectrum&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_ham</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_ham</span><span class="p">))</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_black</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_black</span><span class="p">),</span> <span class="s">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_rect</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_rect</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+
+    <span class="c">#Bandpass</span>
+    <span class="c">#first need a low-pass with fc 0.35</span>
+    <span class="n">fc</span> <span class="o">=</span> <span class="mf">0.35</span>
+    <span class="n">ham_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">hamming</span><span class="p">)</span>
+    <span class="n">black_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">blackman</span><span class="p">)</span>
+    <span class="n">rect_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">)</span>
+    <span class="n">ham_hp</span> <span class="o">=</span> <span class="n">ham_lp</span><span class="o">*</span><span class="n">shift</span>
+    <span class="n">black_hp</span> <span class="o">=</span> <span class="n">black_lp</span><span class="o">*</span><span class="n">shift</span>
+    <span class="n">rect_hp</span> <span class="o">=</span> <span class="n">rect_lp</span><span class="o">*</span><span class="n">shift</span>
+    <span class="c">#now we can create the bandpass filter</span>
+    <span class="n">ham_bp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">ham_lp</span><span class="p">,</span> <span class="n">ham_hp</span><span class="p">)</span>
+    <span class="n">black_bp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">black_lp</span><span class="p">,</span> <span class="n">black_hp</span><span class="p">)</span>
+    <span class="n">rect_bp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">rect_lp</span><span class="p">,</span> <span class="n">rect_hp</span><span class="p">)</span>
+
+    <span class="c">#filter the signals</span>
+    <span class="n">f_ham</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">ham_bp</span><span class="p">)</span>
+    <span class="n">f_black</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">black_bp</span><span class="p">)</span>
+    <span class="n">f_rect</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">rect_bp</span><span class="p">)</span>
+
+    <span class="c">#plotting</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Spectrum&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Bandpass Filter Frequency Response&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">ham_bp</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">black_bp</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">rect_bp</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="s">&#39;Hamming&#39;</span><span class="p">,</span> <span class="s">&#39;Blackman&#39;</span><span class="p">,</span> <span class="s">&#39;Rectangular&#39;</span><span class="p">))</span>
+    <span class="c">#window and fft</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filtered Spectrum&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_ham</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_ham</span><span class="p">))</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_black</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_black</span><span class="p">),</span> <span class="s">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_rect</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_rect</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+
+    <span class="c">#Bandstop</span>
+    <span class="c">#first need a low-pass with fc 0.15</span>
+    <span class="n">fc</span> <span class="o">=</span> <span class="mf">0.15</span>
+    <span class="n">ham_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">hamming</span><span class="p">)</span>
+    <span class="n">black_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">blackman</span><span class="p">)</span>
+    <span class="n">rect_lp</span> <span class="o">=</span> <span class="n">build_filter</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">fc</span><span class="p">)</span>
+    <span class="c">#next need a high-pass</span>
+    <span class="n">ham_hp</span> <span class="o">=</span> <span class="n">ham_lp</span><span class="o">*</span><span class="n">shift</span>
+    <span class="n">black_hp</span> <span class="o">=</span> <span class="n">black_lp</span><span class="o">*</span><span class="n">shift</span>
+    <span class="n">rect_hp</span> <span class="o">=</span> <span class="n">rect_lp</span><span class="o">*</span><span class="n">shift</span>
+    <span class="c">#now we can create the bandstop filter</span>
+    <span class="n">ham_bs</span> <span class="o">=</span> <span class="n">ham_lp</span> <span class="o">+</span> <span class="n">ham_hp</span>
+    <span class="n">black_bs</span> <span class="o">=</span> <span class="n">black_lp</span> <span class="o">+</span> <span class="n">black_hp</span>
+    <span class="n">rect_bs</span> <span class="o">=</span> <span class="n">rect_lp</span> <span class="o">+</span> <span class="n">rect_hp</span>
+
+    <span class="c">#filter the signals</span>
+    <span class="n">f_ham</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">ham_bs</span><span class="p">)</span>
+    <span class="n">f_black</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">black_bs</span><span class="p">)</span>
+    <span class="n">f_rect</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">rect_bs</span><span class="p">)</span>
+
+    <span class="c">#plotting</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Original Spectrum&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Bandstop Filter Frequency Response&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">ham_bs</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">black_bs</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">rect_bs</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="s">&#39;Hamming&#39;</span><span class="p">,</span> <span class="s">&#39;Blackman&#39;</span><span class="p">,</span> <span class="s">&#39;Rectangular&#39;</span><span class="p">))</span>
+    <span class="c">#window and fft</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Filtered Spectrum&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Normalised Frequency&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_ham</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_ham</span><span class="p">))</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_black</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_black</span><span class="p">),</span> <span class="s">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plot_fft</span><span class="p">(</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_rect</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">f_rect</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+
+    <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Signal Processing Library 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Matthew Baker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
