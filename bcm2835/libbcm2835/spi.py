@@ -25,7 +25,7 @@ def main():
     Usage: sudo python spi.py
     
     """
-    if !bcm2835_init():
+    if not bcm2835_init():
         return
 
     bcm2835_spi_begin()
