@@ -10,7 +10,7 @@ setup(
     This package is a python ctypes wrapper for the libbcm2835 api 
     http://www.airspayce.com/mikem/bcm2835/
     """,
-    version=libqrencode.version,
+    version=libbcm2835.version,
     packages=['libbcm2835'],
     package_dir={'libbcm2835': './libbcm2835'},
     url='http://matbaker.net',
